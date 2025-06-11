@@ -22,17 +22,7 @@ const COLORS = ["white", "red", "yellow", "pink"];
 export default function TodoApp() {
   const [curColor, setCurColor] = useState(COLORS[0]);
 
-  // 검색어 입력 State
-  const [searchText, setSearchText] = useState("");
-
-  const { todoList } = useTodo();
-
-  const searchedTodoList = useMemo(() => {
-    return todoList.filter((todo) => {
-      const todoText = todo.text;
-      return todoText.includes(searchText);
-    });
-  }, [todoList, searchText]);
+  const { setSearchText } = useTodo();
 
   return (
     <div

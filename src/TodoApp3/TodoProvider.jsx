@@ -2,6 +2,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -26,6 +27,16 @@ const todoContext = createContext(null);
 
 export default function TodoProvider({ children }) {
   const [todoList, setTodoList] = useState([]);
+
+  // 검색어 입력 State
+  const [searchText, setSearchText] = useState("");
+  const searchedTodoList = useMemo(() => {
+    return todoList.filter((todo) => {
+      const todoText = todo.text;
+      return todoText.includes(searchText);
+    });
+  }, [todoList, searchText]);
+
   const addTodo = ({ text, color }) => {
     const newTodoList = [
       ...todoList,
@@ -67,7 +78,13 @@ export default function TodoProvider({ children }) {
 
   return (
     <todoContext.Provider
-      value={{ todoList, addTodo, removeTodo, editTodo }}
+      value={{
+        todoList: searchedTodoList,
+        addTodo,
+        removeTodo,
+        editTodo,
+        setSearchText,
+      }}
     >
       {children}
     </todoContext.Provider>
