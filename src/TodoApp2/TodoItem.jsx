@@ -1,4 +1,26 @@
-export default function TodoItem({ color, text }) {
+import { useRef, useState } from "react";
+
+export default function TodoItem({
+  todoId,
+  color,
+  text,
+  removeTodo,
+  editTodo,
+}) {
+  // const inputRef = useRef();
+  const [inputText, setInputText] = useState(text);
+
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const onClickEdit = () => {
+    if (!isEditMode) {
+      setIsEditMode(true);
+    } else {
+      editTodo(todoId, { text: inputText });
+      setIsEditMode(false);
+    }
+  };
+
   return (
     <li
       style={{
@@ -6,9 +28,29 @@ export default function TodoItem({ color, text }) {
         padding: 10,
         backgroundColor: color,
         borderRadius: 5,
+        position: "relative",
       }}
     >
-      {text}
+      {isEditMode ? (
+        <input
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+        />
+      ) : (
+        <span>{text}</span>
+      )}
+
+      <span style={{ position: "absolute", right: 10 }}>
+        <button onClick={onClickEdit}>수정</button>
+
+        <button
+          onClick={() => {
+            removeTodo(todoId);
+          }}
+        >
+          삭제
+        </button>
+      </span>
     </li>
   );
 }

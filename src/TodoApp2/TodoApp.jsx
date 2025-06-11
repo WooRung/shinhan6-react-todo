@@ -2,7 +2,11 @@ import { useEffect, useState, useMemo } from "react";
 import TodoInput from "./TodoInput";
 import Colorbar from "./ColorBar";
 import TodoList from "./TodoList";
+import { v4 as uuidv4 } from "uuid";
 
+// ID부여
+// - uuid
+// - state하나 사용 -> 초기값 0 => Auto-Increment
 const COLORS = ["white", "red", "yellow", "pink"];
 
 /**
@@ -22,6 +26,15 @@ export default function TodoApp() {
   // 검색어 입력 State
   const [searchText, setSearchText] = useState("");
 
+  const removeTodo = (todoId) => {
+    const newTodoList = todoList.filter((todo, idx) => {
+      return todoId !== todo.id;
+    });
+    setTodoList(newTodoList);
+
+    localStorage.setItem("todo-list", JSON.stringify(newTodoList));
+  };
+
   // const searchedTodoList = todoList.filter((todo) => {
   //   const todoText = todo.text; // string
   //   return todoText.includes(searchText);
@@ -34,13 +47,30 @@ export default function TodoApp() {
   }, [todoList, searchText]);
 
   const addTodo = ({ text, color }) => {
-    const newTodoList = [...todoList, { text, color }];
+    const newTodoList = [...todoList, { id: uuidv4(), text, color }];
 
     // setState함수는 비동기로 동작 --> Promise가 아님.
     setTodoList(newTodoList);
 
     // localStorage.setItem("todo-list", newTodoList);
 
+    localStorage.setItem("todo-list", JSON.stringify(newTodoList));
+  };
+
+  // 수정
+  const editTodo = (todoId, newTodo) => {
+    const newTodoList = todoList.map((todo) => {
+      if (todo.id === todoId) {
+        return {
+          ...todo,
+          ...newTodo,
+          id: todo.id,
+        };
+      }
+      return todo;
+    });
+
+    setTodoList(newTodoList);
     localStorage.setItem("todo-list", JSON.stringify(newTodoList));
   };
 
@@ -110,6 +140,8 @@ export default function TodoApp() {
                 <TodoList
                   // todoList={todoList}
                   todoList={searchedTodoList}
+                  editTodo={editTodo}
+                  removeTodo={removeTodo}
                 />
               </div>
             </div>

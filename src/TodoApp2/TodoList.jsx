@@ -1,7 +1,7 @@
 import React from "react";
 import TodoItem from "./TodoItem";
 
-export default function TodoList({ todoList }) {
+export default function TodoList({ todoList, removeTodo, editTodo }) {
   return (
     <ul
       style={{
@@ -12,8 +12,17 @@ export default function TodoList({ todoList }) {
         gap: 10,
       }}
     >
-      {todoList.map(({ text, color }) => {
-        return <TodoItem text={text} color={color} />;
+      {todoList.map(({ id, text, color }, idx) => {
+        return (
+          <TodoItem
+            key={id}
+            todoId={id}
+            text={text}
+            color={color}
+            removeTodo={removeTodo}
+            editTodo={editTodo}
+          />
+        );
       })}
     </ul>
   );
