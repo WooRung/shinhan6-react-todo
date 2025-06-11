@@ -1,7 +1,9 @@
 import React from "react";
 import TodoItem from "./TodoItem";
+import { useTodo } from "./TodoProvider";
 
-export default function TodoList({ todoList, removeTodo, editTodo }) {
+export default function TodoList() {
+  const { todoList } = useTodo();
   return (
     <ul
       style={{
@@ -20,8 +22,6 @@ export default function TodoList({ todoList, removeTodo, editTodo }) {
             todoId={id}
             text={text}
             color={color}
-            removeTodo={removeTodo}
-            editTodo={editTodo}
           />
         );
       })}
